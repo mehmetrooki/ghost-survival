@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.3</p>
+    <p class="version">v1.4</p>
   </div>
 </main>
 
@@ -154,13 +154,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/192dcffb23fb90a7efc495bfe4a4288d.data.unityweb",
-    frameworkUrl: buildUrl + "/4cc51e65fd7d9b899c96c276973c7b11.framework.js.unityweb",
-    codeUrl: buildUrl + "/2074b07324c607272981ce25dd585089.wasm.unityweb",
+    dataUrl: buildUrl + "/ff8e5c5483332d8d5d7c689cec433eb2.data.unityweb",
+    frameworkUrl: buildUrl + "/fd4665baf1ec7477d4722fd508ce1264.framework.js.unityweb",
+    codeUrl: buildUrl + "/fd16efc839d05c64d07a9eff5536cb01.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.3",
+    productVersion: "1.4",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); }
@@ -180,7 +180,7 @@
       }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/d54e39472fd0e32d618fd484e4eb7af2.loader.js";
+    script.src = buildUrl + "/1ac8f7cef2ee0e19fda54c5fb1a62ed0.loader.js";
     script.onload = function () {
       createUnityInstance(canvas, config, function (progress) {
         var pct = Math.round(progress * 100);
