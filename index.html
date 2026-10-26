@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ghost Survival</title>
+<meta name="description" content="Survive until the night is over. A dark fantasy survival game for phones and the browser.">
+<meta name="theme-color" content="#06090d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="TemplateData/favicon.png">
+<link rel="apple-touch-icon" href="TemplateData/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ghost Survival">
+<link rel="stylesheet" href="TemplateData/style.css">
+</head>
+<body>
+<canvas id="unity-canvas" tabindex="-1"></canvas>
+
+<main id="landing" class="screen" hidden>
+  <div class="card">
+    <img class="icon" src="TemplateData/icon-192.png" alt="">
+    <h1>Ghost Survival</h1>
+    <p class="tagline" id="tagline"></p>
+    <div id="actions"></div>
+    <p class="version">v1.3</p>
+  </div>
+</main>
+
+<div id="loading" class="screen" hidden>
+  <div class="card">
+    <img class="icon" src="TemplateData/icon-192.png" alt="">
+    <p class="loading-title" id="loading-title"></p>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <p class="note" id="loading-pct">0%</p>
+  </div>
+</div>
+
+<div id="rotate" class="screen">
+  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="20" y="6" width="24" height="42" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M12 54a22 22 0 0 0 34 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M46 50v8h-8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <p id="rotate-text"></p>
+</div>
+
+<div id="error" class="screen" hidden>
+  <div class="card">
+    <h2 id="error-title"></h2>
+    <p class="note" id="error-text"></p>
+    <button class="btn" id="retry" type="button"></button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  // Android players get the app from the release; iPhones play this page and keep it as a home-screen app.
+  var APK_URL = "https://github.com/mehmetrooki/ghost-survival/releases/latest/download/GhostSurvival.apk";
+  var BUILD_MB = "53", APK_MB = "110";
+  var SHARE = '<svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10H3v12h14V10h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+  var TEXT = {
+    en: {
+      tagline: "Survive until the night is over",
+      play: "PLAY",
+      playBrowser: "PLAY IN BROWSER",
+      android: "DOWNLOAD FOR ANDROID",
+      androidApk: "Android app (APK)",
+      androidNote: "Open the downloaded file and tap Install. If Android asks, allow installs from this browser.",
+      iosTitle: "Install on iPhone",
+      iosSteps: "Tap <b>Share</b> " + SHARE + " and choose <b>Add to Home Screen</b>. The game then opens full screen from its own icon.",
+      browserSize: "The browser version downloads about %MB% MB the first time, then starts from the cache.",
+      apkSize: "About %MB% MB.",
+      loading: "Loading the night...",
+      starting: "Lighting the braziers...",
+      rotate: "Turn your phone sideways",
+      errorTitle: "The game could not start",
+      network: "A game file could not be downloaded. Check the connection and try again.",
+      retry: "TRY AGAIN"
+    },
+    tr: {
+      tagline: "Gece bitene kadar hayatta kal",
+      play: "OYNA",
+      playBrowser: "TARAYICIDA OYNA",
+      android: "ANDROID İÇİN İNDİR",
+      androidApk: "Android uygulaması (APK)",
+      androidNote: "İnen dosyayı açıp Yükle'ye dokun. Android sorarsa bu tarayıcıdan yüklemeye izin ver.",
+      iosTitle: "iPhone'a kur",
+      iosSteps: "<b>Paylaş</b> " + SHARE + " düğmesine dokun ve <b>Ana Ekrana Ekle</b>'yi seç. Oyun bundan sonra kendi simgesinden tam ekran açılır.",
+      browserSize: "Tarayıcı sürümü ilk seferde yaklaşık %MB% MB indirir, sonra önbellekten açılır.",
+      apkSize: "Yaklaşık %MB% MB.",
+      loading: "Gece yükleniyor...",
+      starting: "Mangallar yakılıyor...",
+      rotate: "Telefonunu yan çevir",
+      errorTitle: "Oyun başlatılamadı",
+      network: "Bir oyun dosyası indirilemedi. Bağlantını kontrol edip tekrar dene.",
+      retry: "TEKRAR DENE"
+    }
+  };
+  var lang = /^tr\b/i.test(navigator.language || "") ? "tr" : "en";
+  var t = TEXT[lang];
+  document.documentElement.lang = lang;
+
+  var ua = navigator.userAgent;
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/i.test(ua);
+  var standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches;
+
+  function $(id) { return document.getElementById(id); }
+  var canvas = $("unity-canvas"), landing = $("landing"), loading = $("loading"), actions = $("actions");
+  $("tagline").textContent = t.tagline;
+  $("loading-title").textContent = t.loading;
+  $("rotate-text").textContent = t.rotate;
+  $("error-title").textContent = t.errorTitle;
+  $("retry").textContent = t.retry;
+  $("retry").addEventListener("click", function () { location.reload(); });
+
+  function known(value) { return value.indexOf("%") < 0; }
+  function button(label, secondary, onClick, href) {
+    var el = document.createElement(href ? "a" : "button");
+    el.className = "btn" + (secondary ? " secondary" : "");
+    el.textContent = label;
+    if (href) el.href = href; else el.type = "button";
+    if (onClick) el.addEventListener("click", onClick);
+    actions.appendChild(el);
+  }
+  function note(html) {
+    var p = document.createElement("p");
+    p.className = "note";
+    p.innerHTML = html;
+    actions.appendChild(p);
+  }
+  function howto(title, html) {
+    var box = document.createElement("div");
+    box.className = "howto";
+    box.innerHTML = "<h2>" + title + "</h2><p>" + html + "</p>";
+    actions.appendChild(box);
+  }
+  var browserSize = known(BUILD_MB) ? t.browserSize.replace("%MB%", BUILD_MB) : "";
+  var apkSize = known(APK_MB) ? " " + t.apkSize.replace("%MB%", APK_MB) : "";
+
+  if (isAndroid) {
+    button(t.android, false, null, APK_URL);
+    note(t.androidNote + apkSize);
+    button(t.playBrowser, true, start);
+    if (browserSize) note(browserSize);
+  } else if (isIOS) {
+    button(t.play, false, start);
+    if (browserSize) note(browserSize);
+    howto(t.iosTitle, t.iosSteps);
+  } else {
+    button(t.playBrowser, false, start);
+    if (browserSize) note(browserSize);
+    button(t.androidApk, true, null, APK_URL);
+  }
+
+  var buildUrl = "Build";
+  var config = {
+    dataUrl: buildUrl + "/192dcffb23fb90a7efc495bfe4a4288d.data.unityweb",
+    frameworkUrl: buildUrl + "/4cc51e65fd7d9b899c96c276973c7b11.framework.js.unityweb",
+    codeUrl: buildUrl + "/2074b07324c607272981ce25dd585089.wasm.unityweb",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "DefaultCompany",
+    productName: "GhostSurvival",
+    productVersion: "1.3",
+    // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
+    devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+    showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); }
+  };
+
+  var started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    landing.hidden = true;
+    loading.hidden = false;
+    document.body.classList.add("playing");
+    var root = document.documentElement;
+    if (isAndroid && root.requestFullscreen) {
+      root.requestFullscreen({ navigationUI: "hide" }).then(function () {
+        if (screen.orientation && screen.orientation.lock) return screen.orientation.lock("landscape");
+      }).catch(function () {});
+    }
+    var script = document.createElement("script");
+    script.src = buildUrl + "/d54e39472fd0e32d618fd484e4eb7af2.loader.js";
+    script.onload = function () {
+      createUnityInstance(canvas, config, function (progress) {
+        var pct = Math.round(progress * 100);
+        $("bar-fill").style.width = pct + "%";
+        $("loading-pct").textContent = pct + "%";
+        if (progress >= 0.9) $("loading-title").textContent = t.starting;
+      }).then(function () {
+        loading.hidden = true;
+        canvas.focus();
+      }).catch(fail);
+    };
+    script.onerror = function () { fail(t.network); };
+    document.body.appendChild(script);
+  }
+
+  function fail(message) {
+    loading.hidden = true;
+    landing.hidden = true;
+    $("error-text").textContent = String(message && message.message || message || t.network);
+    $("error").hidden = false;
+  }
+
+  // opened from the home-screen icon: go straight into the game
+  if (standalone) start(); else landing.hidden = false;
+})();
+</script>
+</body>
+</html>
