@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.4</p>
+    <p class="version">v1.4.1</p>
   </div>
 </main>
 
@@ -55,7 +55,7 @@
   "use strict";
   // Android players get the app from the release; iPhones play this page and keep it as a home-screen app.
   var APK_URL = "https://github.com/mehmetrooki/ghost-survival/releases/latest/download/GhostSurvival.apk";
-  var BUILD_MB = "53", APK_MB = "110";
+  var BUILD_MB = "54", APK_MB = "110";
   var SHARE = '<svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10H3v12h14V10h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
   var TEXT = {
     en: {
@@ -154,16 +154,22 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/ff8e5c5483332d8d5d7c689cec433eb2.data.unityweb",
+    dataUrl: buildUrl + "/3f630ea23c69d2ecdb0e3f2f59a42ae6.data.unityweb",
     frameworkUrl: buildUrl + "/fd4665baf1ec7477d4722fd508ce1264.framework.js.unityweb",
     codeUrl: buildUrl + "/fd16efc839d05c64d07a9eff5536cb01.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.4",
+    productVersion: "1.4.1",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
-    showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); }
+    showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
+    // a sound the browser cannot decode only goes silent; it must not stop the game with Unity's error dialog
+    errorHandler: function (message) {
+      if (!/EncodingError|Decoding failed|decodeAudioData|Decode error/i.test(String(message))) return false;
+      console.warn("Sound skipped: " + message);
+      return true;
+    }
   };
 
   var started = false;
