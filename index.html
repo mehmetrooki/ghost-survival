@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.6</p>
+    <p class="version">v1.7</p>
   </div>
 </main>
 
@@ -55,7 +55,7 @@
   "use strict";
   // Android players get the app from the release; iPhones play this page and keep it as a home-screen app.
   var APK_URL = "https://github.com/mehmetrooki/ghost-survival/releases/latest/download/GhostSurvival.apk";
-  var BUILD_MB = "55", APK_MB = "116";
+  var BUILD_MB = "58", APK_MB = "119";
   var SHARE = '<svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10H3v12h14V10h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
   var TEXT = {
     en: {
@@ -154,13 +154,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/db21c57921cb1c2191a69336d8fa3b9e.data.unityweb",
-    frameworkUrl: buildUrl + "/6dc5965344dfc786ecb6b9d9a6ea7b54.framework.js.unityweb",
-    codeUrl: buildUrl + "/5527e8edf158ccb624120732ac3df198.wasm.unityweb",
+    dataUrl: buildUrl + "/59a9ee4bdbfbc7591ba096f7c1457e05.data.unityweb",
+    frameworkUrl: buildUrl + "/b252ee261681bfc86a528a6c904c1187.framework.js.unityweb",
+    codeUrl: buildUrl + "/dd5ae94134e75d629d58be8c8e1be9ff.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
-    productName: "Ghost Survival",
-    productVersion: "1.6",
+    productName: "GhostSurvival",
+    productVersion: "1.7",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
@@ -186,7 +186,7 @@
       }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/803e87a4806ff040ae4c00735278f0f4.loader.js";
+    script.src = buildUrl + "/79fba6d37abe006e6f8e13e43f92f6da.loader.js";
     script.onload = function () {
       createUnityInstance(canvas, config, function (progress) {
         var pct = Math.round(progress * 100);
