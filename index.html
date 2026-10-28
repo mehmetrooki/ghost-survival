@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.7</p>
+    <p class="version">v1.8</p>
   </div>
 </main>
 
@@ -35,11 +35,6 @@
     <div class="bar"><div id="bar-fill"></div></div>
     <p class="note" id="loading-pct">0%</p>
   </div>
-</div>
-
-<div id="rotate" class="screen">
-  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="20" y="6" width="24" height="42" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M12 54a22 22 0 0 0 34 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M46 50v8h-8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <p id="rotate-text"></p>
 </div>
 
 <div id="error" class="screen" hidden>
@@ -71,7 +66,6 @@
       apkSize: "About %MB% MB.",
       loading: "Loading the night...",
       starting: "Lighting the braziers...",
-      rotate: "Turn your phone sideways",
       errorTitle: "The game could not start",
       network: "A game file could not be downloaded. Check the connection and try again.",
       retry: "TRY AGAIN"
@@ -89,7 +83,6 @@
       apkSize: "Yaklaşık %MB% MB.",
       loading: "Gece yükleniyor...",
       starting: "Mangallar yakılıyor...",
-      rotate: "Telefonunu yan çevir",
       errorTitle: "Oyun başlatılamadı",
       network: "Bir oyun dosyası indirilemedi. Bağlantını kontrol edip tekrar dene.",
       retry: "TEKRAR DENE"
@@ -108,7 +101,6 @@
   var canvas = $("unity-canvas"), landing = $("landing"), loading = $("loading"), actions = $("actions");
   $("tagline").textContent = t.tagline;
   $("loading-title").textContent = t.loading;
-  $("rotate-text").textContent = t.rotate;
   $("error-title").textContent = t.errorTitle;
   $("retry").textContent = t.retry;
   $("retry").addEventListener("click", function () { location.reload(); });
@@ -154,13 +146,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/59a9ee4bdbfbc7591ba096f7c1457e05.data.unityweb",
-    frameworkUrl: buildUrl + "/b252ee261681bfc86a528a6c904c1187.framework.js.unityweb",
-    codeUrl: buildUrl + "/dd5ae94134e75d629d58be8c8e1be9ff.wasm.unityweb",
+    dataUrl: buildUrl + "/cace0e47f2584099cdea9bad675b4f47.data.unityweb",
+    frameworkUrl: buildUrl + "/9412eeccfe96b208785d37e59082f1fd.framework.js.unityweb",
+    codeUrl: buildUrl + "/d0d5258ef3c71df012fd75b2435c230d.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.7",
+    productVersion: "1.8",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
@@ -181,12 +173,11 @@
     document.body.classList.add("playing");
     var root = document.documentElement;
     if (isAndroid && root.requestFullscreen) {
-      root.requestFullscreen({ navigationUI: "hide" }).then(function () {
-        if (screen.orientation && screen.orientation.lock) return screen.orientation.lock("landscape");
-      }).catch(function () {});
+      // the game lays itself out for whichever way the phone is held, so the screen is not locked sideways
+      root.requestFullscreen({ navigationUI: "hide" }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/79fba6d37abe006e6f8e13e43f92f6da.loader.js";
+    script.src = buildUrl + "/e50d1a334227109d7ce3d7b5e3972c70.loader.js";
     script.onload = function () {
       createUnityInstance(canvas, config, function (progress) {
         var pct = Math.round(progress * 100);
