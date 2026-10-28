@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.10</p>
+    <p class="version">v1.11 · <a id="privacy" href="privacy.html"></a></p>
   </div>
 </main>
 
@@ -50,7 +50,7 @@
   "use strict";
   // Android players get the app from the release; iPhones play this page and keep it as a home-screen app.
   var APK_URL = "https://github.com/mehmetrooki/ghost-survival/releases/latest/download/GhostSurvival.apk";
-  var BUILD_MB = "58", APK_MB = "119";
+  var BUILD_MB = "57", APK_MB = "115";
   var SHARE = '<svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10H3v12h14V10h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
   var TEXT = {
     en: {
@@ -68,7 +68,8 @@
       starting: "Lighting the braziers...",
       errorTitle: "The game could not start",
       network: "A game file could not be downloaded. Check the connection and try again.",
-      retry: "TRY AGAIN"
+      retry: "TRY AGAIN",
+      privacy: "Privacy"
     },
     tr: {
       tagline: "Gece bitene kadar hayatta kal",
@@ -85,7 +86,8 @@
       starting: "Mangallar yakılıyor...",
       errorTitle: "Oyun başlatılamadı",
       network: "Bir oyun dosyası indirilemedi. Bağlantını kontrol edip tekrar dene.",
-      retry: "TEKRAR DENE"
+      retry: "TEKRAR DENE",
+      privacy: "Gizlilik"
     }
   };
   var lang = /^tr\b/i.test(navigator.language || "") ? "tr" : "en";
@@ -103,6 +105,8 @@
   $("loading-title").textContent = t.loading;
   $("error-title").textContent = t.errorTitle;
   $("retry").textContent = t.retry;
+  $("privacy").textContent = t.privacy;
+  $("privacy").href = "privacy.html#" + lang;
   $("retry").addEventListener("click", function () { location.reload(); });
 
   function known(value) { return value.indexOf("%") < 0; }
@@ -146,13 +150,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/8aacd440974066216847edd97bf23651.data.unityweb",
-    frameworkUrl: buildUrl + "/f44411cf9aae6ad6f3734cadda34a342.framework.js.unityweb",
-    codeUrl: buildUrl + "/cc08910c96e6d49df53785d133b43034.wasm.unityweb",
+    dataUrl: buildUrl + "/70f17803844a1bc50226bc53910d582c.data.unityweb",
+    frameworkUrl: buildUrl + "/2ccf369d8eb27856d4d8bbad5bd40ba9.framework.js.unityweb",
+    codeUrl: buildUrl + "/883dd3812c425c2ff30fabdc0a5e3767.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.10",
+    productVersion: "1.11",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
@@ -177,7 +181,7 @@
       root.requestFullscreen({ navigationUI: "hide" }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/66f5062b85550f6d7b3731d718bdfc8c.loader.js";
+    script.src = buildUrl + "/f72419e96c502411f04d4ebae352007a.loader.js";
     script.onload = function () {
       // ask the browser to keep this page's storage (the save) even when the phone runs short of space
       try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () { }); } catch (e) { }
