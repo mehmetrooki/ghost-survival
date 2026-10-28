@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.9</p>
+    <p class="version">v1.10</p>
   </div>
 </main>
 
@@ -61,7 +61,7 @@
       androidApk: "Android app (APK)",
       androidNote: "Open the downloaded file and tap Install. If Android asks, allow installs from this browser.",
       iosTitle: "Install on iPhone",
-      iosSteps: "Tap <b>Share</b> " + SHARE + " and choose <b>Add to Home Screen</b>. The game then opens full screen from its own icon.",
+      iosSteps: "Tap <b>Share</b> " + SHARE + " and choose <b>Add to Home Screen</b>. The game then opens full screen from its own icon. New versions arrive by themselves: keep the same icon, because removing it and adding it again starts a new save.",
       browserSize: "The browser version downloads about %MB% MB the first time, then starts from the cache.",
       apkSize: "About %MB% MB.",
       loading: "Loading the night...",
@@ -78,7 +78,7 @@
       androidApk: "Android uygulaması (APK)",
       androidNote: "İnen dosyayı açıp Yükle'ye dokun. Android sorarsa bu tarayıcıdan yüklemeye izin ver.",
       iosTitle: "iPhone'a kur",
-      iosSteps: "<b>Paylaş</b> " + SHARE + " düğmesine dokun ve <b>Ana Ekrana Ekle</b>'yi seç. Oyun bundan sonra kendi simgesinden tam ekran açılır.",
+      iosSteps: "<b>Paylaş</b> " + SHARE + " düğmesine dokun ve <b>Ana Ekrana Ekle</b>'yi seç. Oyun bundan sonra kendi simgesinden tam ekran açılır. Yeni sürümler kendiliğinden gelir; hep aynı simgeyi kullan, çünkü simgeyi silip yeniden eklemek yeni bir kayıtla başlatır.",
       browserSize: "Tarayıcı sürümü ilk seferde yaklaşık %MB% MB indirir, sonra önbellekten açılır.",
       apkSize: "Yaklaşık %MB% MB.",
       loading: "Gece yükleniyor...",
@@ -146,13 +146,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/36cedc330e8c5e183a73a02873c8b0f5.data.unityweb",
-    frameworkUrl: buildUrl + "/4510affca100d9848781738ebedea6b0.framework.js.unityweb",
-    codeUrl: buildUrl + "/b31ae717d596662a7a0c64098566565c.wasm.unityweb",
+    dataUrl: buildUrl + "/8aacd440974066216847edd97bf23651.data.unityweb",
+    frameworkUrl: buildUrl + "/f44411cf9aae6ad6f3734cadda34a342.framework.js.unityweb",
+    codeUrl: buildUrl + "/cc08910c96e6d49df53785d133b43034.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.9",
+    productVersion: "1.10",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
@@ -177,8 +177,10 @@
       root.requestFullscreen({ navigationUI: "hide" }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/bf29468b7ebbb98474b9388596fd3edd.loader.js";
+    script.src = buildUrl + "/66f5062b85550f6d7b3731d718bdfc8c.loader.js";
     script.onload = function () {
+      // ask the browser to keep this page's storage (the save) even when the phone runs short of space
+      try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () { }); } catch (e) { }
       createUnityInstance(canvas, config, function (progress) {
         var pct = Math.round(progress * 100);
         $("bar-fill").style.width = pct + "%";
