@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.11 · <a id="privacy" href="privacy.html"></a></p>
+    <p class="version">v1.12 · <a id="privacy" href="privacy.html"></a></p>
   </div>
 </main>
 
@@ -50,7 +50,7 @@
   "use strict";
   // Android players get the app from the release; iPhones play this page and keep it as a home-screen app.
   var APK_URL = "https://github.com/mehmetrooki/ghost-survival/releases/latest/download/GhostSurvival.apk";
-  var BUILD_MB = "57", APK_MB = "115";
+  var BUILD_MB = "57", APK_MB = "116";
   var SHARE = '<svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10H3v12h14V10h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
   var TEXT = {
     en: {
@@ -150,13 +150,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/70f17803844a1bc50226bc53910d582c.data.unityweb",
-    frameworkUrl: buildUrl + "/2ccf369d8eb27856d4d8bbad5bd40ba9.framework.js.unityweb",
-    codeUrl: buildUrl + "/883dd3812c425c2ff30fabdc0a5e3767.wasm.unityweb",
+    dataUrl: buildUrl + "/5727c747cf72cb770e0fb2faaffe0bcb.data.unityweb",
+    frameworkUrl: buildUrl + "/eeff020e3cdd34f96adb6f471fdf9cd0.framework.js.unityweb",
+    codeUrl: buildUrl + "/55f327f1e1997125185186dd8ca64aae.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.11",
+    productVersion: "1.12",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
@@ -181,7 +181,7 @@
       root.requestFullscreen({ navigationUI: "hide" }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/f72419e96c502411f04d4ebae352007a.loader.js";
+    script.src = buildUrl + "/4c9445042a51a495052c61df7c8328ac.loader.js";
     script.onload = function () {
       // ask the browser to keep this page's storage (the save) even when the phone runs short of space
       try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () { }); } catch (e) { }
