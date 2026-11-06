@@ -24,7 +24,7 @@
     <h1>Ghost Survival</h1>
     <p class="tagline" id="tagline"></p>
     <div id="actions"></div>
-    <p class="version">v1.18 · <a id="privacy" href="privacy.html"></a></p>
+    <p class="version">v1.19 · <a id="privacy" href="privacy.html"></a></p>
   </div>
 </main>
 
@@ -150,13 +150,13 @@
 
   var buildUrl = "Build";
   var config = {
-    dataUrl: buildUrl + "/4762b0f160c008d4e6ecb79e92d3b9ad.data.unityweb",
+    dataUrl: buildUrl + "/b933afb2515b8b35cfff99c07bfaced7.data.unityweb",
     frameworkUrl: buildUrl + "/56c1e9881890e2154728dab7ece3f869.framework.js.unityweb",
-    codeUrl: buildUrl + "/01d3c9dc43658167428fb79c55697843.wasm.unityweb",
+    codeUrl: buildUrl + "/b611f6c540b67870d1cc824d7f6a300e.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "GhostSurvival",
-    productVersion: "1.18",
+    productVersion: "1.19",
     // full device resolution costs a lot of fill rate on 3x phone screens; 2x stays sharp
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) { if (type === "error") fail(message); else console.warn(message); },
@@ -181,7 +181,7 @@
       root.requestFullscreen({ navigationUI: "hide" }).catch(function () {});
     }
     var script = document.createElement("script");
-    script.src = buildUrl + "/ff2e840ca1fa309f2e1c02d77c95b3d7.loader.js";
+    script.src = buildUrl + "/a728a63a3d6a7a2038b1098b375219e6.loader.js";
     script.onload = function () {
       // ask the browser to keep this page's storage (the save) even when the phone runs short of space
       try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () { }); } catch (e) { }
